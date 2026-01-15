@@ -35,8 +35,8 @@
             overflow: hidden;
         }
 
-        /* Chromecast Background */
-        .chromecast-bg {
+        /* Slideshow Background */
+        .slideshow {
             position: absolute;
             top: 0;
             left: 0;
@@ -46,14 +46,30 @@
             overflow: hidden;
         }
 
-        .chromecast-bg iframe {
+        .slide {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            border: none;
-            pointer-events: none;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 2s ease-in-out;
+            animation: kenBurns 20s ease-in-out infinite alternate;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        @keyframes kenBurns {
+            0% {
+                transform: scale(1) translate(0, 0);
+            }
+            100% {
+                transform: scale(1.1) translate(-1%, -1%);
+            }
         }
 
         /* Subtle overlay to ensure text readability */
@@ -63,8 +79,33 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.3);
+            background: linear-gradient(
+                to bottom,
+                rgba(0, 0, 0, 0.2) 0%,
+                rgba(0, 0, 0, 0.3) 50%,
+                rgba(0, 0, 0, 0.5) 100%
+            );
             z-index: -1;
+        }
+
+        /* Photo credits */
+        .photo-credit {
+            position: absolute;
+            bottom: 1.5rem;
+            left: 1.5rem;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+            z-index: 10;
+            transition: opacity 0.5s ease;
+        }
+
+        .photo-credit a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+        }
+
+        .photo-credit a:hover {
+            text-decoration: underline;
         }
 
         /* Content */
@@ -225,10 +266,14 @@
 </head>
 <body>
     <section class="hero">
-        <div class="chromecast-bg">
-            <iframe src="https://clients3.google.com/cast/chromecast/home" allow="autoplay"></iframe>
+        <div class="slideshow">
+            <div class="slide"></div>
+            <div class="slide"></div>
         </div>
         <div class="bg-overlay"></div>
+        <div class="photo-credit">
+            <span class="credit-text"></span>
+        </div>
 
         <div class="content">
             <h1 class="name">Remco Brink</h1>
@@ -284,5 +329,123 @@
         </div>
     </section>
 
+    <script>
+        // Background slideshow images from Unsplash
+        const images = [
+            // Mountains & Peaks
+            { url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=80', credit: 'Samuel Ferrara', source: 'Unsplash' },
+            { url: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1920&q=80', credit: 'Kalen Emsley', source: 'Unsplash' },
+            { url: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1920&q=80', credit: 'Benjamin Voros', source: 'Unsplash' },
+            { url: 'https://images.unsplash.com/photo-1454496522488-7a8e488e8606?w=1920&q=80', credit: 'Jeff Sheldon', source: 'Unsplash' },
+            { url: 'https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?w=1920&q=80', credit: 'Cristina Gottardi', source: 'Unsplash' },
+            { url: 'https://images.unsplash.com/photo-1486870591958-9b9d0d1dda99?w=1920&q=80', credit: 'Rohit Tandon', source: 'Unsplash' },
+
+            // Forests & Nature
+            { url: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1920&q=80', credit: 'Lukasz Szmigiel', source: 'Unsplash' },
+            { url: 'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=1920&q=80', credit: 'Robert Lukeman', source: 'Unsplash' },
+            { url: 'https://images.unsplash.com/photo-1501854140801-50d01698950b?w=1920&q=80', credit: 'Qingbao Meng', source: 'Unsplash' },
+            { url: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1920&q=80', credit: 'Luca Bravo', source: 'Unsplash' },
+            { url: 'https://images.unsplash.com/photo-1448375240586-882707db888b?w=1920&q=80', credit: 'Sebastian Unrau', source: 'Unsplash' },
+
+            // Water & Lakes
+            { url: 'https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=1920&q=80', credit: 'Mark Basarab', source: 'Unsplash' },
+            { url: 'https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=1920&q=80', credit: 'Aperture Vintage', source: 'Unsplash' },
+            { url: 'https://images.unsplash.com/photo-1505765050516-f72dcac9c60e?w=1920&q=80', credit: 'Davide Cantelli', source: 'Unsplash' },
+            { url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1920&q=80', credit: 'Erik Eastman', source: 'Unsplash' },
+
+            // Sky & Aurora
+            { url: 'https://images.unsplash.com/photo-1494500764479-0c8f2919a3d8?w=1920&q=80', credit: 'Joshua Earle', source: 'Unsplash' },
+            { url: 'https://images.unsplash.com/photo-1518173946687-a4c036bc3c95?w=1920&q=80', credit: 'Pascal Debrunner', source: 'Unsplash' },
+            { url: 'https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=1920&q=80', credit: 'Jonatan Pie', source: 'Unsplash' },
+            { url: 'https://images.unsplash.com/photo-1579033461380-adb47c3eb938?w=1920&q=80', credit: 'Lightscape', source: 'Unsplash' },
+
+            // Desert & Canyons
+            { url: 'https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=1920&q=80', credit: 'Ivana Cajina', source: 'Unsplash' },
+            { url: 'https://images.unsplash.com/photo-1474044159687-1ee9f3a51722?w=1920&q=80', credit: 'Josh Hild', source: 'Unsplash' },
+            { url: 'https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?w=1920&q=80', credit: 'Wil Stewart', source: 'Unsplash' },
+
+            // Ocean & Coast
+            { url: 'https://images.unsplash.com/photo-1505142468610-359e7d316be0?w=1920&q=80', credit: 'frank mckenna', source: 'Unsplash' },
+            { url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1920&q=80', credit: 'Sean Oulashin', source: 'Unsplash' },
+            { url: 'https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=1920&q=80', credit: 'Matt Hardy', source: 'Unsplash' },
+
+            // Space & Stars
+            { url: 'https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=1920&q=80', credit: 'Vincentiu Solomon', source: 'Unsplash' },
+            { url: 'https://images.unsplash.com/photo-1465101162946-4377e57745c3?w=1920&q=80', credit: 'Jeremy Thomas', source: 'Unsplash' },
+            { url: 'https://images.unsplash.com/photo-1462332420958-a05d1e002413?w=1920&q=80', credit: 'Greg Rakozy', source: 'Unsplash' },
+
+            // Misc Landscapes
+            { url: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=1920&q=80', credit: 'David Marcu', source: 'Unsplash' },
+            { url: 'https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=1920&q=80', credit: 'Amos G', source: 'Unsplash' }
+        ];
+
+        const slides = document.querySelectorAll('.slide');
+        const creditText = document.querySelector('.credit-text');
+        let currentIndex = 0;
+        let activeSlide = 0;
+
+        // Shuffle array
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Initialize slideshow
+        function initSlideshow() {
+            shuffle(images);
+
+            // Load first image
+            const firstImage = images[0];
+            slides[0].style.backgroundImage = `url(${firstImage.url})`;
+            slides[0].classList.add('active');
+            updateCredit(firstImage);
+
+            // Preload second image
+            if (images.length > 1) {
+                const secondImage = images[1];
+                slides[1].style.backgroundImage = `url(${secondImage.url})`;
+            }
+        }
+
+        function updateCredit(image) {
+            creditText.style.opacity = '0';
+            setTimeout(() => {
+                creditText.innerHTML = `Photo by <a href="#">${image.credit}</a> · ${image.source}`;
+                creditText.style.opacity = '1';
+            }, 500);
+        }
+
+        function nextSlide() {
+            currentIndex = (currentIndex + 1) % images.length;
+            const nextIndex = (currentIndex + 1) % images.length;
+
+            // Toggle active slide
+            const currentSlide = activeSlide;
+            const nextSlideEl = activeSlide === 0 ? 1 : 0;
+
+            // Set next image on inactive slide
+            slides[nextSlideEl].style.backgroundImage = `url(${images[currentIndex].url})`;
+
+            // Crossfade
+            slides[currentSlide].classList.remove('active');
+            slides[nextSlideEl].classList.add('active');
+
+            // Update credit
+            updateCredit(images[currentIndex]);
+
+            // Preload next image
+            const preloadImg = new Image();
+            preloadImg.src = images[nextIndex].url;
+
+            activeSlide = nextSlideEl;
+        }
+
+        // Start slideshow
+        initSlideshow();
+        setInterval(nextSlide, 10000); // Change every 10 seconds
+    </script>
 </body>
 </html>
