@@ -267,21 +267,50 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.15);
             border-radius: 50%;
-            color: white;
+            color: rgba(255,255,255,0.7);
             cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .social-trigger::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+            opacity: 0;
+            transform: scale(0.8);
             transition: all 0.3s ease;
         }
 
         .social-trigger svg {
             width: 20px;
             height: 20px;
+            transition: transform 0.3s ease;
         }
 
         .social-trigger:hover {
-            background: rgba(255,255,255,0.2);
+            color: white;
+            border-color: rgba(255,255,255,0.3);
+        }
+
+        .social-trigger:hover::before {
+            opacity: 1;
+            transform: scale(1);
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .social-trigger:hover svg {
+            transform: scale(1.1);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.15); }
         }
 
         .social-icons {
@@ -305,12 +334,24 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
+            color: rgba(255,255,255,0.8);
             text-decoration: none;
             border-radius: 50%;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             opacity: 0;
             transform: scale(0.5);
+            position: relative;
+        }
+
+        .social-icons a::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.3s ease;
         }
 
         .social-expand:hover .social-icons a {
@@ -324,14 +365,26 @@
         .social-expand:hover .social-icons a:nth-child(4) { transition-delay: 0.2s; }
         .social-expand:hover .social-icons a:nth-child(5) { transition-delay: 0.25s; }
 
-        .social-icons a:hover {
-            background: rgba(255,255,255,0.2);
-            transform: scale(1.2);
+        .social-expand:hover .social-icons a:hover {
+            color: white;
+            transform: scale(1.2) rotate(-8deg);
+        }
+
+        .social-expand:hover .social-icons a:hover::before {
+            opacity: 1;
+            transform: scale(1);
         }
 
         .social-icons svg {
             width: 18px;
             height: 18px;
+            transition: transform 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .social-icons a:hover svg {
+            filter: drop-shadow(0 0 8px rgba(255,255,255,0.6));
         }
 
         @keyframes fadeSlideUp {
